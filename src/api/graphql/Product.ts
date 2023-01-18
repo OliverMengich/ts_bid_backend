@@ -1,18 +1,8 @@
-import {objectType, interfaceType, nonNull, enumType, queryType, intArg, mutationField, stringArg, arg, floatArg, idArg} from "nexus";
+import {objectType, interfaceType, nonNull, enumType, queryType, intArg, mutationField, stringArg, arg, floatArg, idArg, list} from "nexus";
 const CategoryEnum = enumType({
     name: "CategoryEnum",
     members: ["Electronics","Groceries","Animals"]
 });
-const IProductInput = interfaceType({
-    name: 'ProductInput',
-    definition(t){
-        // t.string('title',nonNull(stringArg())),
-        // t.implementarg({type: CategoryEnum}),
-        // arg({type: "id",default: "" }),
-        // nonNull(stringArg()),
-        //     price: nonNull(floatArg()),
-    }
-})
 export const Product = objectType({
     name: "Product",
     definition(t){
@@ -26,7 +16,7 @@ export const Product = objectType({
 export const ProductQuery = queryType({
     definition(t) {
         t.list.field("products",{
-            type: Product,
+            type: list(Product),
             resolve(_,__,ctx){
                 
             }
@@ -72,7 +62,7 @@ export const ProductMutation = mutationField((t)=>{
             id: nonNull(idArg()),
         },
         resolve(_,__,ctx){
-            
+
         }
     })
 }) 

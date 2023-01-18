@@ -50,12 +50,8 @@ const Auction = sequelize.define("Auctions",{
 		type: DataTypes.FLOAT,
 		allowNull: false,
     },
-    auctionCurrentPrice: {
+    auctionUpdatedPrice: {
       type: DataTypes.FLOAT,
-      allowNull: false,
-    },
-    auctionIncrement: {
-      type: DataTypes.STRING,
       allowNull: false,
     },
     auctionIncrementTime: {

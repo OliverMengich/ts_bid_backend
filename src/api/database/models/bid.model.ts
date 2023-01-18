@@ -8,7 +8,7 @@ const Bid = sequelize.define(
       allowNull: false,
       primaryKey: true,
     },
-    user: {
+    bidder: {
       type: DataTypes.UUIDV4,
       references: {
         model: "Users",

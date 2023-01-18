@@ -5,7 +5,13 @@ const sequelize = new Sequelize('postgresql://postgres:Oliver8677@localhost:5432
     logging: false
 });
 const authenticate =async() => {   
-    await sequelize.authenticate().then(()=>console.log("Connected to DB"))
+    await sequelize.authenticate().then(async()=>{
+        await sequelize.sync().then(res=>{
+            console.log("Connected to the database");
+        })
+    }).catch(err=>{
+        console.error(err);
+    })
 }
 authenticate();
 export default sequelize;
