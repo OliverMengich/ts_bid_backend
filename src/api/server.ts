@@ -1,2 +1,5 @@
 import { ApolloServer } from "@apollo/server";
-export const server = new ApolloServer();
+import { schema } from "./schema";
+export const server = new ApolloServer({
+    schema
+});

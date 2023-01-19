@@ -1,17 +1,9 @@
 import { Sequelize } from "sequelize";
-const sequelize = new Sequelize('postgresql://postgres:Oliver8677@localhost:5432/development_db',{
-    host: 'localhost',
-    dialect: "postgres",
-    logging: false
-});
+const sequelize = new Sequelize('postgresql://postgres:Oliver8677@localhost:5432/development_db');
 const authenticate =async() => {   
-    await sequelize.authenticate().then(async()=>{
-        await sequelize.sync().then(res=>{
-            console.log("Connected to the database");
-        })
-    }).catch(err=>{
-        console.error(err);
-    })
+    await sequelize.authenticate().then((res) => {
+        console.log("Connected to the database");
+    });
 }
 authenticate();
 export default sequelize;
