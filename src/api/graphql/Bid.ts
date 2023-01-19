@@ -23,12 +23,14 @@ export const Bid = objectType({
 export const BidQuery = queryType({
     definition(t) {
         t.list.field("bids",{
-            type: list(Bid),
+            type: Bid,
             description: "Fetch a list of Bids",
-            resolve(_,__,ctx){}
+            resolve(_,__,ctx){
+                
+            }
         })
         t.field("bid",{
-            type: Bid,
+            type: nonNull(Bid),
             description:"Retrieve a bid by id",
             resolve(_,__,ctx){}
         })

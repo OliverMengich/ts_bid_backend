@@ -1,6 +1,7 @@
 import { idArg, mutationField, nonNull, objectType, queryType, booleanArg, list, stringArg, subscriptionField } from "nexus";
 import { Product } from "./Product";
 import { Bid } from "./Bid";
+import { User } from "./User";
 import { PubSub } from "graphql-subscriptions";
 const pubSub = new PubSub();
 export const Auction = objectType({
@@ -15,7 +16,7 @@ export const Auction = objectType({
         })
         t.nonNull.boolean("auctionStatus")
         t.nonNull.field("auctionWinner",{
-            type: "User"
+            type: User
         })
         t.nonNull.string("auctionStartTime");
         t.nonNull.string("auctionEndTime");
@@ -29,14 +30,18 @@ export const Auction = objectType({
 export const AuctionQuery = queryType({
     definition(t) {
         t.list.field("auctions",{
-            type: list(Auction),
-            description: "Fetch a list of Auctions",
-            resolve(_,__,ctx){}
+            type: Auction,
+            // description: "Fetch a list of Auctions",
+            resolve(_,__,ctx){
+                
+            }
         })
         t.field("auction",{
             type: Auction,
-            description:"Retrieve an auction by id",
-            resolve(_,__,ctx){}
+            // description:"Retrieve an auction by id",
+            resolve(_,__,ctx){
+
+            }
         })
     }
 });

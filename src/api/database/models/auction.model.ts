@@ -1,28 +1,56 @@
 import sequelize from "../db";
-import { DataTypes } from "sequelize";
-const Auction = sequelize.define("Auctions",{
+import { DataTypes, Optional,Model } from "sequelize";
+interface AuctionAttributes {
+	id: string;
+	product: string;
+	bids: string;
+	auctionStatus: boolean;
+	creator: string;
+	auctionWinner: string;
+	auctionStartPrice: number;
+	auctionStartTime: string;
+	auctionEndTime: string;
+	createdAt?: Date;
+	updatedAt?: Date;
+}
+export interface AuctionInputs extends Optional<AuctionAttributes, "id" | "auctionWinner"> {}
+export interface IngredientOutputs extends Required<AuctionAttributes> {}
+class AuctionModel extends Model<AuctionAttributes, AuctionInputs> implements AuctionAttributes {
+	public readonly id!: string;
+	public product!: string;
+	public bids!: string;
+	public auctionStatus!: boolean;
+	public creator!: string;
+	public auctionWinner!: string;
+	public auctionStartPrice!: number;
+	public auctionStartTime!: string;
+	public auctionEndTime!: string;
+	public readonly createdAt!: Date;
+	public readonly updatedAt!: Date;
+}
+AuctionModel.init({
     id: {
-		type: DataTypes.UUIDV4,
-		allowNull: false,
-		primaryKey: true,
+        type: DataTypes.UUIDV4,
+        allowNull: false,
+        primaryKey: true,
     },
     product: {
-		type: DataTypes.UUIDV4,
-		allowNull: false,
-		references: {
-			model: "Products",
-			key: "id",
-		},
+        type: DataTypes.UUIDV4,
+        allowNull: false,
+        references: {
+            model: "Products",
+            key: "id",
+        },
     },
     bids: {
-		type: DataTypes.STRING,
-		references: {
-			model: "Bids",
-			key: "id",
-		},
-		allowNull: false,
+        type: DataTypes.STRING,
+        references: {
+            model: "Bids",
+            key: "id",
+        },
+        allowNull: false,
     },
-    auctionStatus: {
+	auctionStatus: {
 		type: DataTypes.BOOLEAN,
 		allowNull: false,
     },
@@ -50,23 +78,11 @@ const Auction = sequelize.define("Auctions",{
 		type: DataTypes.FLOAT,
 		allowNull: false,
     },
-    auctionUpdatedPrice: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
-    },
-    auctionIncrementTime: {
-      type: DataTypes.TIME,
-      defaultValue: "",
-      allowNull: false,
-    },
-    auctionIncrementPrice: {
-      type: DataTypes.FLOAT,
-      defaultValue: 0,
-      allowNull: false,
-    },
   },
   {
     timestamps: true,
-  }
-);
-export default Auction;
+	paranoid: true,
+	sequelize
+  });
+
+export default AuctionModel;
