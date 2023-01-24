@@ -85,4 +85,4 @@ AuctionModel.init({
 	sequelize
   });
 
-export default AuctionModel;
+export default new AuctionModel;
