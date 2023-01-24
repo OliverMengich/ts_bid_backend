@@ -1,4 +1,4 @@
-import { idArg, mutationField, nonNull, objectType, queryType, booleanArg, list, stringArg, subscriptionField } from "nexus";
+import { idArg, mutationField, nonNull, objectType, queryType, booleanArg, list, stringArg, subscriptionField, extendType } from "nexus";
 import { Product } from "./Product";
 import { Bid } from "./Bid";
 import { User } from "./User";
@@ -27,11 +27,12 @@ export const Auction = objectType({
         t.nonNull.string("updatedAt");
     },
 });
-export const AuctionQuery = queryType({
+export const AuctionQuery = extendType({
+    type: "Query",
     definition(t) {
         t.list.field("auctions",{
             type: Auction,
-            // description: "Fetch a list of Auctions",
+            description: "Fetch a list of Auctions",
             resolve(_,__,ctx){
                 
             }
@@ -45,90 +46,93 @@ export const AuctionQuery = queryType({
         })
     }
 });
-export const AuctionMutation = mutationField((t)=>{
-    t.nonNull.field("createAuction",{
-        type: Auction,
-        args:{
-            productId: nonNull(idArg()),
-            auctionStatus: nonNull(booleanArg()),
-            auctionWinner: nonNull(idArg()),
-            auctionStartTime: nonNull(stringArg()),
-            auctionEndTime: nonNull(stringArg()),
-            auctionStartPrice: nonNull(stringArg()),
-            auctionUpdatedPrice: nonNull(stringArg()),
-            auctionIncrementTime: nonNull(stringArg()),
-        },
-        resolve(_,__,ctx){
-            pubSub.publish("createAuction", {
-                data: {
-                    id: "1",
-                    product: "1",
-                    auctionStatus: true,
-                    auctionWinner: "1",
-                    auctionStartTime: new Date(),
-                    auctionEndTime: new Date(),
-                    auctionStartPrice: 1.1,
-                    auctionUpdatedPrice: 1.1,
-                    auctionIncrementTime: 1.1,
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
-                },
-            });
-        }
-    });
-    t.nonNull.field("updateAuction", {
-        type: Auction,
-        args: {
-            auctionId: nonNull(idArg()),
-            auctionStatus: nonNull(booleanArg()),
-            auctionWinner: nonNull(idArg()),
-            auctionStartTime: nonNull(stringArg()),
-            auctionEndTime: nonNull(stringArg()),
-            auctionStartPrice: nonNull(stringArg()),
-            auctionUpdatedPrice: nonNull(stringArg()),
-            auctionIncrementTime: nonNull(stringArg()),
-        },
-        resolve(_,__,ctx){
-            pubSub.publish("updateAuction", {
-                data: {
-                    id: "1",
-                    product: "1",
-                    auctionStatus: true,
-                    auctionWinner: "1",
-                    auctionStartTime: new Date(),
-                    auctionEndTime: new Date(),
-                    auctionStartPrice: 1.1,
-                    auctionUpdatedPrice: 1.1,
-                    auctionIncrementTime: 1.1,
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
-                },
-            });
-        }
-    });
-    t.nonNull.field("deleteAuction", {
-        type: Auction,
-        args: {
-            auctionId: nonNull(idArg()),
-        },
-        resolve(_,__,ctx){
-            pubSub.publish("deleteAuction", {
-                data: {
-                    id: "1",
-                    product: "1",
-                    auctionStatus: true,
-                    auctionWinner: "1",
-                    auctionStartTime: new Date(),
-                    auctionEndTime: new Date(),
-                    auctionStartPrice: 1.1,
-                    auctionUpdatedPrice: 1.1,
-                    auctionIncrementTime: 1.1,
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
-                },
-            });
-        }
-    });
+export const AuctionMutation = extendType({
+    type: "Mutation",
+    definition: t =>{
+        t.nonNull.field("createAuction",{
+            type: Auction,
+            args:{
+                productId: nonNull(idArg()),
+                auctionStatus: nonNull(booleanArg()),
+                auctionWinner: nonNull(idArg()),
+                auctionStartTime: nonNull(stringArg()),
+                auctionEndTime: nonNull(stringArg()),
+                auctionStartPrice: nonNull(stringArg()),
+                auctionUpdatedPrice: nonNull(stringArg()),
+                auctionIncrementTime: nonNull(stringArg()),
+            },
+            resolve(_,__,ctx){
+                pubSub.publish("createAuction", {
+                    data: {
+                        id: "1",
+                        product: "1",
+                        auctionStatus: true,
+                        auctionWinner: "1",
+                        auctionStartTime: new Date(),
+                        auctionEndTime: new Date(),
+                        auctionStartPrice: 1.1,
+                        auctionUpdatedPrice: 1.1,
+                        auctionIncrementTime: 1.1,
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                    },
+                });
+            }
+        });
+        t.nonNull.field("updateAuction", {
+            type: Auction,
+            args: {
+                auctionId: nonNull(idArg()),
+                auctionStatus: nonNull(booleanArg()),
+                auctionWinner: nonNull(idArg()),
+                auctionStartTime: nonNull(stringArg()),
+                auctionEndTime: nonNull(stringArg()),
+                auctionStartPrice: nonNull(stringArg()),
+                auctionUpdatedPrice: nonNull(stringArg()),
+                auctionIncrementTime: nonNull(stringArg()),
+            },
+            resolve(_,__,ctx){
+                pubSub.publish("updateAuction", {
+                    data: {
+                        id: "1",
+                        product: "1",
+                        auctionStatus: true,
+                        auctionWinner: "1",
+                        auctionStartTime: new Date(),
+                        auctionEndTime: new Date(),
+                        auctionStartPrice: 1.1,
+                        auctionUpdatedPrice: 1.1,
+                        auctionIncrementTime: 1.1,
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                    },
+                });
+            }
+        });
+        t.nonNull.field("deleteAuction", {
+            type: Auction,
+            args: {
+                auctionId: nonNull(idArg()),
+            },
+            resolve(_,__,ctx){
+                pubSub.publish("deleteAuction", {
+                    data: {
+                        id: "1",
+                        product: "1",
+                        auctionStatus: true,
+                        auctionWinner: "1",
+                        auctionStartTime: new Date(),
+                        auctionEndTime: new Date(),
+                        auctionStartPrice: 1.1,
+                        auctionUpdatedPrice: 1.1,
+                        auctionIncrementTime: 1.1,
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                    },
+                });
+            }
+        });
+    }
 });
 type UserX = {
     id: string;
@@ -163,35 +167,38 @@ type Auction={
     auctionUpdatedPrice: string;
     auctionIncrementTime: string;
 }
-export const AuctionSubscription = subscriptionField((t)=>{
-    t.nonNull.field("createAuction",{
-        type: Auction,
-        subscribe(_,__,ctx){
-            return pubSub.asyncIterator("createAuction");
-        },
-        async resolve(eventPromise: Promise<Event<Auction>>){
-            const payload = await eventPromise;
-            return payload.data;
-        }
-    });
-    t.nonNull.field("updateAuction", {
-        type: Auction,
-        subscribe(_, __, ctx) {
-            return pubSub.asyncIterator("updateAuction");
-        },
-        async resolve(eventPromise: Promise<Event<Auction>>) {
-            const payload = await eventPromise;
-            return payload.data;
-        },
-    });
-    t.nonNull.field("deleteAuction", {
-        type: Auction,
-        subscribe(_, __, ctx) {
-            return pubSub.asyncIterator("deleteAuction");
-        },
-        async resolve(eventPromise: Promise<Event<Auction>>) {
-            const payload = await eventPromise;
-            return payload.data;
-        },
-    });
+export const AuctionSubscription = extendType({
+    type: "Subscription",
+    definition(t) {
+        t.nonNull.field("createAuction",{
+            type: Auction,
+            subscribe(_,__,ctx){
+                return pubSub.asyncIterator("createAuction");
+            },
+            async resolve(eventPromise: Promise<Event<Auction>>){
+                const payload = await eventPromise;
+                return payload.data;
+            }
+        });
+        t.nonNull.field("updateAuction", {
+            type: Auction,
+            subscribe(_, __, ctx) {
+                return pubSub.asyncIterator("updateAuction");
+            },
+            async resolve(eventPromise: Promise<Event<Auction>>) {
+                const payload = await eventPromise;
+                return payload.data;
+            },
+        });
+        t.nonNull.field("deleteAuction", {
+            type: Auction,
+            subscribe(_, __, ctx) {
+                return pubSub.asyncIterator("deleteAuction");
+            },
+            async resolve(eventPromise: Promise<Event<Auction>>) {
+                const payload = await eventPromise;
+                return payload.data;
+            },
+        });
+    }
 })

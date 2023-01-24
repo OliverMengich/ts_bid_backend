@@ -2,7 +2,23 @@
 ### Do not make changes to this file directly
 
 
+type Auction {
+  auctionEndTime: String!
+  auctionIncrementTime: String!
+  auctionStartPrice: String!
+  auctionStartTime: String!
+  auctionStatus: Boolean!
+  auctionUpdatedPrice: String!
+  auctionWinner: User!
+  bids: [Bid!]
+  createdAt: String!
+  id: ID!
+  product: Product!
+  updatedAt: String!
+}
+
 type Bid {
+  auction: Auction!
   bidder: ID!
   categories: String!
   createdAt: Int!
@@ -13,30 +29,65 @@ type Bid {
   user: String!
 }
 
+enum CategoryEnum {
+  Animals
+  Electronics
+  Groceries
+}
+
 type Mutation {
+  createAuction(auctionEndTime: String!, auctionIncrementTime: String!, auctionStartPrice: String!, auctionStartTime: String!, auctionStatus: Boolean!, auctionUpdatedPrice: String!, auctionWinner: ID!, productId: ID!): Auction!
+  createProduct(category: CategoryEnum, imageUrl: String!, owner: String, price: Float!, title: String!): Product!
   deleteABid(bidId: ID!, bidder: ID!): Bid!
+  deleteAuction(auctionId: ID!): Auction!
+  deleteProduct(id: ID!): Product!
   placeABid(auctionId: ID!, bidder: ID!, price: Float!): Bid!
   updateABid(bidId: ID!, bidder: ID!, price: Float!): Bid!
+  updateAuction(auctionEndTime: String!, auctionId: ID!, auctionIncrementTime: String!, auctionStartPrice: String!, auctionStartTime: String!, auctionStatus: Boolean!, auctionUpdatedPrice: String!, auctionWinner: ID!): Auction!
+  updateProduct(category: CategoryEnum, id: ID!, imageUrl: String!, owner: String, price: Float!, title: String!): Product!
 }
 
 type Product {
-  categories: String!
+  category: String!
   id: ID!
   imageUrl: String!
+  owner: ID!
   price: Float!
   title: String!
 }
 
 type Query {
+  auction: Auction
+
+  """Fetch a list of Auctions"""
+  auctions: [Auction]
+
   """Retrieve a bid by id"""
   bid: Bid!
 
   """Fetch a list of Bids"""
   bids: [Bid]
+  product(id: Int!): Product!
+
+  """Fetch a list of products"""
+  products: [Product]
 }
 
 type Subscription {
+  createAuction: Auction!
+  deleteAuction: Auction!
   deleteBid: Bid
   placeABid: Bid
+  updateAuction: Auction!
   updateBid: Bid
+}
+
+type User {
+  createdAt: String!
+  email: String!
+  id: ID!
+  name: String!
+  password: String!
+  phoneNumber: String!
+  updatedAt: String!
 }

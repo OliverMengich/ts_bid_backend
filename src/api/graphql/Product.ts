@@ -1,4 +1,4 @@
-import {objectType, interfaceType, nonNull, enumType, queryType, intArg, mutationField, stringArg, arg, floatArg, idArg, list} from "nexus";
+import {objectType, interfaceType, nonNull, enumType, intArg, mutationField, stringArg, arg, floatArg, idArg, list, extendType} from "nexus";
 const CategoryEnum = enumType({
     name: "CategoryEnum",
     members: ["Electronics","Groceries","Animals"]
@@ -9,20 +9,23 @@ export const Product = objectType({
         t.nonNull.id("id");
         t.nonNull.string("title")
         t.nonNull.float("price");
-        t.nonNull.string("categories");
+        t.nonNull.string("category");
         t.nonNull.string("imageUrl");
+        t.nonNull.id("owner");
     }
 });
-export const ProductQuery = queryType({
+export const ProductQuery = extendType({
+    type: "Query",
     definition(t) {
         t.list.field("products",{
-            type: list(Product),
+            type: Product,
+            description: "Fetch a list of products",
             resolve(_,__,ctx){
                 
             }
         })
-        t.list.field("product",{
-            type: Product,
+        t.field("product",{
+            type: nonNull(Product),
             args: {
                 id: nonNull(intArg())
             },
@@ -32,37 +35,40 @@ export const ProductQuery = queryType({
         })
     },
 });
-export const ProductMutation = mutationField((t)=>{
-    t.nonNull.field('createProduct',{
-        type: Product,
-        args: {
-            title: nonNull(stringArg()),
-            category: arg({type: CategoryEnum}),
-            UserId: arg({type: "id",default: "" }),
-            imageUrl: nonNull(stringArg()),
-            price: nonNull(floatArg()),
-        },
-        resolve(_,__,ctx){}
-    })
-    t.nonNull.field("updateProduct", {
-        type: Product,
-        args: {
-            id: nonNull(idArg()),
-            title: nonNull(stringArg()),
-            category: arg({ type: CategoryEnum }),
-            UserId: arg({ type: "id", default: "" }),
-            imageUrl: nonNull(stringArg()),
-            price: nonNull(floatArg()),
-        },
-        resolve(_,__,ctx){}
-    });
-    t.nonNull.field("deleteProduct", {
-        type: Product,
-        args: {
-            id: nonNull(idArg()),
-        },
-        resolve(_,__,ctx){
-
-        }
-    })
+export const ProductMutation = extendType({
+    type: "Mutation",
+    definition: t =>{
+        t.nonNull.field("createProduct", {
+            type: Product,
+            args: {
+                title: nonNull(stringArg()),
+                category: arg({ type: CategoryEnum }),
+                owner: arg({ type: "String" }),
+                imageUrl: nonNull(stringArg()),
+                price: nonNull(floatArg()),
+            },
+            resolve(_, __, ctx) {},
+        });
+        t.nonNull.field("updateProduct", {
+            type: Product,
+            args: {
+                id: nonNull(idArg()),
+                title: nonNull(stringArg()),
+                category: arg({ type: CategoryEnum }),
+                owner: arg({type: "String"}),
+                imageUrl: nonNull(stringArg()),
+                price: nonNull(floatArg()),
+            },
+            resolve(_,__,ctx){}
+        });
+        t.nonNull.field("deleteProduct", {
+            type: Product,
+            args: {
+                id: nonNull(idArg()),
+            },
+            resolve(_,__,ctx){
+    
+            }
+        })
+    }
 }) 
