@@ -2,8 +2,8 @@ import sequelize from "../db";
 import { DataTypes, Optional,Model } from "sequelize";
 interface AuctionAttributes {
 	id: string;
-	product: string;
-	bids: string;
+	// product: string;
+	// bids: string;
 	auctionStatus: boolean;
 	creator: string;
 	auctionWinner: string;
@@ -30,32 +30,33 @@ class AuctionModel extends Model<AuctionAttributes, AuctionInputs> implements Au
 }
 AuctionModel.init({
     id: {
-        type: DataTypes.UUIDV4,
+        type: DataTypes.UUID,
         allowNull: false,
         primaryKey: true,
+		defaultValue: DataTypes.UUIDV4
     },
-    product: {
-        type: DataTypes.UUIDV4,
-        allowNull: false,
-        references: {
-            model: "Products",
-            key: "id",
-        },
-    },
-    bids: {
-        type: DataTypes.STRING,
-        references: {
-            model: "Bids",
-            key: "id",
-        },
-        allowNull: false,
-    },
+    // product: {
+    //     type: DataTypes.UUID,
+    //     allowNull: false,
+    //     references: {
+    //         model: "Products",
+    //         key: "id",
+    //     },
+    // },
+    // bids: {
+    //     type: DataTypes.STRING,
+    //     references: {
+    //         model: "Bids",
+    //         key: "id",
+    //     },
+    //     allowNull: false,
+    // },
 	auctionStatus: {
 		type: DataTypes.BOOLEAN,
 		allowNull: false,
     },
     creator: {
-		type: DataTypes.UUIDV1,
+		type: DataTypes.UUID,
 		allowNull: false,
 		references: {
 			model: "Users",
@@ -63,7 +64,7 @@ AuctionModel.init({
 		},
     },
     auctionWinner: {
-		type: DataTypes.UUIDV1,
+		type: DataTypes.UUID,
 		allowNull: false,
     },
     auctionStartTime: {
@@ -85,4 +86,4 @@ AuctionModel.init({
 	sequelize
   });
 
-export default new AuctionModel;
+export default AuctionModel;

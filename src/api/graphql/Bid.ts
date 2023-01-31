@@ -2,6 +2,8 @@ import { extendType, floatArg, idArg, list, mutationField, nonNull, objectType, 
 import { Product } from "./Product";
 import { PubSub } from "graphql-subscriptions";
 import { Auction } from "./Auction";
+import DBClient from "../database/DBClient";
+import { Model } from "sequelize";
 const pubSub = new PubSub();
 export const Bid = objectType({
     name: "Bid",

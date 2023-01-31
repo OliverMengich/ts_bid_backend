@@ -11,7 +11,7 @@ class RepoError extends Error{
         this.code = code;
     }
 }
-export type AucRes<M> = Promise<Result<M | undefined, RepoError| undefined>>;
+type AucRes<M> = Promise<Result<M | undefined, RepoError| undefined>>;
 class Result<V,E>{
     public isSuccess: boolean;
     public isFailure: boolean;
@@ -54,6 +54,7 @@ interface IAuction<M>{
 }
 export default class DBClient<M extends Model> implements IAuction<M> {
     private Model!: ModelStatic<M>;
+
     constructor(Model: ModelStatic<M>){
         this.Model = Model;
         sequelize.sync()
