@@ -4,6 +4,7 @@ import { Bid } from "./Bid";
 import { User } from "./User";
 import { PubSub } from "graphql-subscriptions";
 const pubSub = new PubSub();
+
 export const Auction = objectType({
     name: "Auction",
     definition(t) {
@@ -33,8 +34,10 @@ export const AuctionQuery = extendType({
         t.list.field("auctions",{
             type: Auction,
             description: "Fetch a list of Auctions",
-            resolve(_,__,ctx){
+            async resolve(_,__,ctx){
+                console.log("ctx.db",ctx.db);
                 
+                await ctx.db.Auctions.findAll();
             }
         })
         t.field("auction",{
