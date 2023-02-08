@@ -1,12 +1,9 @@
 import {objectType, interfaceType, nonNull, enumType, intArg, mutationField, stringArg, arg, floatArg, idArg, list, extendType} from "nexus";
-import DBClient from "../database/DBClient";
-import Products from "../database/models/product.model";
-import { context } from "../context";
+import { ProductX  }  from "../typeDefs";
 const CategoryEnum = enumType({
     name: "CategoryEnum",
-    members: ["Electronics","Groceries","Animals"]
+    members: ["Electronics","Fashion","Home","Sports","Books","Groceries","Animals","Other"]
 });
-context.db= new DBClient(Products)
 export const Product = objectType({
     name: "Product",
     definition(t){
@@ -14,7 +11,7 @@ export const Product = objectType({
         t.nonNull.string("title")
         t.nonNull.float("price");
         t.nonNull.string("category");
-        t.nonNull.string("imageUrl");
+        t.nonNull.list.string("imageUri");
         t.nonNull.id("owner");
     }
 });
@@ -25,9 +22,9 @@ export const ProductQuery = extendType({
             type: Product,
             description: "Fetch a list of products",
             async resolve(_,__,ctx){
-                const product = await ctx.db.findAll();
-                console.log(ctx.db);
-                return product.value;
+                const product = await ctx.db.product.findMany();
+                console.log(product);
+                return product;
             }
         })
         t.field("product",{
@@ -50,10 +47,16 @@ export const ProductMutation = extendType({
                 title: nonNull(stringArg()),
                 category: arg({ type: CategoryEnum }),
                 owner: arg({ type: "String" }),
-                imageUrl: nonNull(stringArg()),
+                imageUri: nonNull(stringArg()),
                 price: nonNull(floatArg()),
             },
-            resolve(_, __, ctx) {},
+            async resolve(_, _args, ctx) {
+                const newProd: ProductX = await ctx.db.product.create({
+                    data:{..._args}
+                })
+                console.log(newProd);
+                return newProd;
+            },
         });
         t.nonNull.field("updateProduct", {
             type: Product,
@@ -62,7 +65,7 @@ export const ProductMutation = extendType({
                 title: nonNull(stringArg()),
                 category: arg({ type: CategoryEnum }),
                 owner: arg({type: "String"}),
-                imageUrl: nonNull(stringArg()),
+                imageUri: nonNull(stringArg()),
                 price: nonNull(floatArg()),
             },
             resolve(_,__,ctx){}

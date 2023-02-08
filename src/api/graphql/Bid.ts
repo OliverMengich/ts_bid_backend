@@ -1,11 +1,7 @@
 import { extendType, floatArg, idArg, list, mutationField, nonNull, objectType, queryType, subscriptionField } from "nexus";
 import { Product } from "./Product";
 import { PubSub } from "graphql-subscriptions";
-import { Auction } from "./Auction";
-import DBClient from "../database/DBClient";
-import { Model } from "sequelize";
-import Bids from "../database/models/bid.model";
-new DBClient(Bids);
+import { Auction } from "./Auction";;
 const pubSub = new PubSub();
 export const Bid = objectType({
     name: "Bid",
@@ -31,8 +27,10 @@ export const BidQuery = extendType({
         t.list.field("bids",{
             type: Bid,
             description: "Fetch a list of Bids",
-            resolve(_,__,ctx){
-                
+            async resolve(_,__,ctx){
+                const rs = await ctx.db.bids.findMany();
+                console.log(rs);
+                return rs
             }
         })
         t.field("bid",{

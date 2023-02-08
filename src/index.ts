@@ -1,5 +1,4 @@
 import {startStandaloneServer} from '@apollo/server/standalone';
-import sequelize from './api/database/db';
 import { server } from './api/server';
 import { context } from './api/context';
 const url = startStandaloneServer(server,{
@@ -7,7 +6,6 @@ const url = startStandaloneServer(server,{
         console.log("Context was Initialized");
         return{
             db: context.db,
-            auctionsdb: context.auctionsdb,
             user: null
         }
     }

@@ -8,10 +8,6 @@ import {
     queryType,
     subscriptionField,
 } from "nexus";
-import UserModel from "../database/models/user.model";
-import DBClient from "../database/DBClient";
-import { Model } from "sequelize";
-new DBClient(UserModel)
 export const User = objectType({
     name: "User",
     definition(t) {
@@ -29,7 +25,9 @@ export const UserQuery = queryType({
         t.list.field("users", {
             type: list(User),
             description: "Fetch a list of Users",
-            resolve(_, __, ctx) { }
+            async resolve(_, __, ctx) {
+                
+            }
         });
         t.field("user", {
             type: User,

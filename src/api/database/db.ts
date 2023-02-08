@@ -1,11 +1,2 @@
-import { Sequelize } from "sequelize";
-const sequelize = new Sequelize('postgresql://postgres:Oliver8677@localhost:5432/bidding_db',{
-    logging: false
-});
-const authenticate =async() => {   
-    await sequelize.authenticate().then((res) => {
-        console.log("Connected to the database");
-    });
-}
-authenticate();
-export default sequelize;
+import { PrismaClient } from "@prisma/client";
+export const db = new PrismaClient();

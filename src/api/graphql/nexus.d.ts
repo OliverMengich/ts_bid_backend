@@ -17,7 +17,7 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
-  CategoryEnum: "Animals" | "Electronics" | "Groceries"
+  CategoryEnum: "Animals" | "Books" | "Electronics" | "Fashion" | "Groceries" | "Home" | "Other" | "Sports"
 }
 
 export interface NexusGenScalars {
@@ -58,7 +58,7 @@ export interface NexusGenObjects {
   Product: { // root type
     category: string; // String!
     id: string; // ID!
-    imageUrl: string; // String!
+    imageUri: Array<string | null>; // [String]!
     owner: string; // ID!
     price: number; // Float!
     title: string; // String!
@@ -115,18 +115,21 @@ export interface NexusGenFieldTypes {
   Mutation: { // field return type
     createAuction: NexusGenRootTypes['Auction']; // Auction!
     createProduct: NexusGenRootTypes['Product']; // Product!
+    createUser: NexusGenRootTypes['User']; // User!
     deleteABid: NexusGenRootTypes['Bid']; // Bid!
     deleteAuction: NexusGenRootTypes['Auction']; // Auction!
     deleteProduct: NexusGenRootTypes['Product']; // Product!
+    deleteUser: NexusGenRootTypes['User']; // User!
     placeABid: NexusGenRootTypes['Bid']; // Bid!
     updateABid: NexusGenRootTypes['Bid']; // Bid!
     updateAuction: NexusGenRootTypes['Auction']; // Auction!
     updateProduct: NexusGenRootTypes['Product']; // Product!
+    updateUser: NexusGenRootTypes['User']; // User!
   }
   Product: { // field return type
     category: string; // String!
     id: string; // ID!
-    imageUrl: string; // String!
+    imageUri: Array<string | null>; // [String]!
     owner: string; // ID!
     price: number; // Float!
     title: string; // String!
@@ -138,6 +141,8 @@ export interface NexusGenFieldTypes {
     bids: Array<NexusGenRootTypes['Bid'] | null> | null; // [Bid]
     product: NexusGenRootTypes['Product']; // Product!
     products: Array<NexusGenRootTypes['Product'] | null> | null; // [Product]
+    user: NexusGenRootTypes['User'] | null; // User
+    users: Array<Array<NexusGenRootTypes['User'] | null> | null> | null; // [[User]]
   }
   Subscription: { // field return type
     createAuction: NexusGenRootTypes['Auction']; // Auction!
@@ -187,18 +192,21 @@ export interface NexusGenFieldTypeNames {
   Mutation: { // field return type name
     createAuction: 'Auction'
     createProduct: 'Product'
+    createUser: 'User'
     deleteABid: 'Bid'
     deleteAuction: 'Auction'
     deleteProduct: 'Product'
+    deleteUser: 'User'
     placeABid: 'Bid'
     updateABid: 'Bid'
     updateAuction: 'Auction'
     updateProduct: 'Product'
+    updateUser: 'User'
   }
   Product: { // field return type name
     category: 'String'
     id: 'ID'
-    imageUrl: 'String'
+    imageUri: 'String'
     owner: 'ID'
     price: 'Float'
     title: 'String'
@@ -210,6 +218,8 @@ export interface NexusGenFieldTypeNames {
     bids: 'Bid'
     product: 'Product'
     products: 'Product'
+    user: 'User'
+    users: 'User'
   }
   Subscription: { // field return type name
     createAuction: 'Auction'
@@ -244,10 +254,15 @@ export interface NexusGenArgTypes {
     }
     createProduct: { // args
       category?: NexusGenEnums['CategoryEnum'] | null; // CategoryEnum
-      imageUrl: string; // String!
+      imageUri: string; // String!
       owner?: string | null; // String
       price: number; // Float!
       title: string; // String!
+    }
+    createUser: { // args
+      email: string; // ID!
+      name: string; // ID!
+      password: string; // ID!
     }
     deleteABid: { // args
       bidId: string; // ID!
@@ -257,6 +272,9 @@ export interface NexusGenArgTypes {
       auctionId: string; // ID!
     }
     deleteProduct: { // args
+      id: string; // ID!
+    }
+    deleteUser: { // args
       id: string; // ID!
     }
     placeABid: { // args
@@ -282,10 +300,16 @@ export interface NexusGenArgTypes {
     updateProduct: { // args
       category?: NexusGenEnums['CategoryEnum'] | null; // CategoryEnum
       id: string; // ID!
-      imageUrl: string; // String!
+      imageUri: string; // String!
       owner?: string | null; // String
       price: number; // Float!
       title: string; // String!
+    }
+    updateUser: { // args
+      email: string; // ID!
+      id: string; // ID!
+      name: string; // ID!
+      password: string; // ID!
     }
   }
   Query: {

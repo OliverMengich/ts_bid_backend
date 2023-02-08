@@ -1,8 +1,8 @@
-import DBClient from "./database/DBClient";
-import AuctionModel from "./database/models/auction.model";
-import Products from "./database/models/product.model";
+import { db } from "./database/db";
+import { PrismaClient } from "@prisma/client";
+export interface Context{
+    db: PrismaClient
+}
 export const context = {
-    db: new DBClient(Products),
-    auctionsdb: new DBClient(AuctionModel)
-    // db:  DBClient,
+    db,
 }

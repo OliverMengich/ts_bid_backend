@@ -5,10 +5,8 @@ import { User } from "./User";
 import { PubSub } from "graphql-subscriptions";
 import DBClient from "../database/DBClient";
 import AuctionModel, { AuctionOutputs } from "../database/models/auction.model";
-import { Model } from "sequelize";
 import { context } from "../context";
 const pubSub = new PubSub();
-context.auctionsdb=new DBClient(AuctionModel)
 export const Auction = objectType({
     name: "Auction",
     definition(t) {
@@ -39,11 +37,9 @@ export const AuctionQuery = extendType({
             type: Auction,
             description: "Fetch a list of Auctions",
             async resolve(_root,_args,ctx){
-                console.log(_root,_args)
-                let res = await ctx.auctionsdb.findAll()
-                console.log(res.value);
-                return res.value;
-                // return 1;
+                const res = await ctx.db.auctions.findMany();
+                console.log(res);
+                return res;
             }
         })
         t.field("auction",{

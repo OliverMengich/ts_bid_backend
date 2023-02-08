@@ -31,26 +31,34 @@ type Bid {
 
 enum CategoryEnum {
   Animals
+  Books
   Electronics
+  Fashion
   Groceries
+  Home
+  Other
+  Sports
 }
 
 type Mutation {
   createAuction(auctionEndTime: String!, auctionIncrementTime: String!, auctionStartPrice: String!, auctionStartTime: String!, auctionStatus: Boolean!, auctionUpdatedPrice: String!, auctionWinner: ID!, productId: ID!): Auction!
-  createProduct(category: CategoryEnum, imageUrl: String!, owner: String, price: Float!, title: String!): Product!
+  createProduct(category: CategoryEnum, imageUri: String!, owner: String, price: Float!, title: String!): Product!
+  createUser(email: ID!, name: ID!, password: ID!): User!
   deleteABid(bidId: ID!, bidder: ID!): Bid!
   deleteAuction(auctionId: ID!): Auction!
   deleteProduct(id: ID!): Product!
+  deleteUser(id: ID!): User!
   placeABid(auctionId: ID!, bidder: ID!, price: Float!): Bid!
   updateABid(bidId: ID!, bidder: ID!, price: Float!): Bid!
   updateAuction(auctionEndTime: String!, auctionId: ID!, auctionIncrementTime: String!, auctionStartPrice: String!, auctionStartTime: String!, auctionStatus: Boolean!, auctionUpdatedPrice: String!, auctionWinner: ID!): Auction!
-  updateProduct(category: CategoryEnum, id: ID!, imageUrl: String!, owner: String, price: Float!, title: String!): Product!
+  updateProduct(category: CategoryEnum, id: ID!, imageUri: String!, owner: String, price: Float!, title: String!): Product!
+  updateUser(email: ID!, id: ID!, name: ID!, password: ID!): User!
 }
 
 type Product {
   category: String!
   id: ID!
-  imageUrl: String!
+  imageUri: [String]!
   owner: ID!
   price: Float!
   title: String!
@@ -71,6 +79,12 @@ type Query {
 
   """Fetch a list of products"""
   products: [Product]
+
+  """Retrieve a user by id"""
+  user: User
+
+  """Fetch a list of Users"""
+  users: [[User]]
 }
 
 type Subscription {
