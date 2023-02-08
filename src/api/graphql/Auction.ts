@@ -73,7 +73,7 @@ export const AuctionMutation = extendType({
                     data: {...args}
                 })
                 .then((res)=>{
-                    pubSub.publish("createAuction", {
+                    return pubSub.publish("createAuction", {
                         data: {...res},
                     });
                 }).catch(err=>err)
@@ -82,6 +82,7 @@ export const AuctionMutation = extendType({
         t.nonNull.field("updateAuction", {
             type: Auction,
             args: {
+                id: nonNull(stringArg()),
                 auctionId: nonNull(idArg()),
                 auctionStatus: nonNull(booleanArg()),
                 auctionWinner: nonNull(idArg()),
@@ -92,21 +93,18 @@ export const AuctionMutation = extendType({
                 auctionIncrementTime: nonNull(stringArg()),
             },
             async resolve(_,_args,ctx){
-                pubSub.publish("updateAuction", {
-                    data: {
-                        id: "1",
-                        product: "1",
-                        auctionStatus: true,
-                        auctionWinner: "1",
-                        auctionStartTime: new Date(),
-                        auctionEndTime: new Date(),
-                        auctionStartPrice: 1.1,
-                        auctionUpdatedPrice: 1.1,
-                        auctionIncrementTime: 1.1,
-                        createdAt: new Date(),
-                        updatedAt: new Date(),
+                return await ctx.db.auctions.update({
+                    where: {
+                        id: _args.id
                     },
-                });
+                    data:{
+                        ..._args
+                    }
+                }).then(res=>{
+                    return pubSub.publish("updateAuction", {
+                        data: {...res},
+                    });
+                }).catch(err=>{err})
             }
         });
         t.nonNull.field("deleteAuction", {
@@ -114,22 +112,18 @@ export const AuctionMutation = extendType({
             args: {
                 auctionId: nonNull(idArg()),
             },
-            resolve(_,__,ctx){
-                pubSub.publish("deleteAuction", {
-                    data: {
-                        id: "1",
-                        product: "1",
-                        auctionStatus: true,
-                        auctionWinner: "1",
-                        auctionStartTime: new Date(),
-                        auctionEndTime: new Date(),
-                        auctionStartPrice: 1.1,
-                        auctionUpdatedPrice: 1.1,
-                        auctionIncrementTime: 1.1,
-                        createdAt: new Date(),
-                        updatedAt: new Date(),
-                    },
-                });
+            async resolve(_,_args,ctx){
+                return await ctx.db.auctions.delete({
+                    where:{
+                        id: _args.auctionId
+                    }
+                }).then(res=>{
+                    return pubSub.publish("deleteAuction", {
+                        data: {
+                            ...res
+                        },
+                    })
+                }).catch(err=>err)
             }
         });
     }
