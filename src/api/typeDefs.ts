@@ -1,11 +1,12 @@
 enum CategoryEnum{
-    "Electronics",
-    "Groceries",
-    "Animals",
-    "Fashion",
-    "Home","Sports",
-    "Books",
-    "Other"
+    Electronics,
+    Groceries,
+    Animals,
+    Fashion,
+    Home,
+    Sports,
+    Books,
+    Other
 }
 export interface ProductX {
     id: string;

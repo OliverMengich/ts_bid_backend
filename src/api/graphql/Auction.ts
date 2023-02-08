@@ -3,9 +3,6 @@ import { Product } from "./Product";
 import { Bid } from "./Bid";
 import { User } from "./User";
 import { PubSub } from "graphql-subscriptions";
-import DBClient from "../database/DBClient";
-import AuctionModel, { AuctionOutputs } from "../database/models/auction.model";
-import { context } from "../context";
 const pubSub = new PubSub();
 export const Auction = objectType({
     name: "Auction",
@@ -37,16 +34,21 @@ export const AuctionQuery = extendType({
             type: Auction,
             description: "Fetch a list of Auctions",
             async resolve(_root,_args,ctx){
-                const res = await ctx.db.auctions.findMany();
-                console.log(res);
-                return res;
+                return await ctx.db.auctions.findMany();
             }
         })
         t.field("auction",{
             type: Auction,
-            // description:"Retrieve an auction by id",
-            resolve(_,__,ctx){
-
+            args:{
+                id: nonNull(idArg())
+            },
+            description:"Retrieve an auction by id",
+            async resolve(_,_args,ctx){
+                return await ctx.db.auctions.findUnique({
+                    where:{
+                        id: _args.id
+                    }
+                })
             }
         })
     }
@@ -67,24 +69,14 @@ export const AuctionMutation = extendType({
                 auctionIncrementTime: nonNull(stringArg()),
             },
             async resolve(_,args,ctx){
-                let response = await ctx.db.save({...args});
-                console.log(response);
-                return response.value;
-                // pubSub.publish("createAuction", {
-                //     data: {
-                //         id: "1",
-                //         product: "1",
-                //         auctionStatus: true,
-                //         auctionWinner: "1",
-                //         auctionStartTime: new Date(),
-                //         auctionEndTime: new Date(),
-                //         auctionStartPrice: 1.1,
-                //         auctionUpdatedPrice: 1.1,
-                //         auctionIncrementTime: 1.1,
-                //         createdAt: new Date(),
-                //         updatedAt: new Date(),
-                //     },
-                // });
+                return await ctx.db.auctions.create({
+                    data: {...args}
+                })
+                .then((res)=>{
+                    pubSub.publish("createAuction", {
+                        data: {...res},
+                    });
+                }).catch(err=>err)
             }
         });
         t.nonNull.field("updateAuction", {
@@ -99,7 +91,7 @@ export const AuctionMutation = extendType({
                 auctionUpdatedPrice: nonNull(stringArg()),
                 auctionIncrementTime: nonNull(stringArg()),
             },
-            resolve(_,__,ctx){
+            async resolve(_,_args,ctx){
                 pubSub.publish("updateAuction", {
                     data: {
                         id: "1",

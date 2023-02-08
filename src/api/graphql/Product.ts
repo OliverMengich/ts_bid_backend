@@ -1,8 +1,9 @@
 import {objectType, interfaceType, nonNull, enumType, intArg, mutationField, stringArg, arg, floatArg, idArg, list, extendType} from "nexus";
 import { ProductX  }  from "../typeDefs";
 const CategoryEnum = enumType({
-    name: "CategoryEnum",
-    members: ["Electronics","Fashion","Home","Sports","Books","Groceries","Animals","Other"]
+    name: 'CategoryEnum',
+    members: ['Electronics','Fashion','Home','Sports','Books','Groceries','Animals','Other'],
+    description: "Category of products in my Products table"
 });
 export const Product = objectType({
     name: "Product",
@@ -22,18 +23,28 @@ export const ProductQuery = extendType({
             type: Product,
             description: "Fetch a list of products",
             async resolve(_,__,ctx){
-                const product = await ctx.db.product.findMany();
-                console.log(product);
-                return product;
+                const products: ProductX[] | unknown = await ctx.db.product.findMany();
+                console.log(products);
+                return products;
             }
         })
         t.field("product",{
             type: nonNull(Product),
             args: {
-                id: nonNull(intArg())
+                id: nonNull(stringArg())
             },
-            resolve(_,__,ctx){
-
+            async resolve(_,_args,ctx){
+                const product: ProductX | unknown = await ctx.db.product.findUnique({
+                    where:{
+                        id: _args.id
+                    },
+                    
+                });
+                if (!product) {
+                    return null;
+                }
+                console.log("product found is: ",product);
+                return product;
             }
         })
     },
@@ -47,11 +58,11 @@ export const ProductMutation = extendType({
                 title: nonNull(stringArg()),
                 category: arg({ type: CategoryEnum }),
                 owner: arg({ type: "String" }),
-                imageUri: nonNull(stringArg()),
+                imageUri: nonNull(list(stringArg())),
                 price: nonNull(floatArg()),
             },
             async resolve(_, _args, ctx) {
-                const newProd: ProductX = await ctx.db.product.create({
+                const newProd = await ctx.db.product.create({
                     data:{..._args}
                 })
                 console.log(newProd);
@@ -65,18 +76,40 @@ export const ProductMutation = extendType({
                 title: nonNull(stringArg()),
                 category: arg({ type: CategoryEnum }),
                 owner: arg({type: "String"}),
-                imageUri: nonNull(stringArg()),
+                imageUri: nonNull(list(stringArg())),
                 price: nonNull(floatArg()),
             },
-            resolve(_,__,ctx){}
+            async resolve(_,_args,ctx){
+                const updatedData = await ctx.db.product.update({
+                    where:{
+                        id: _args.id
+                    },
+                    data:{
+                        ..._args
+                    }
+                });
+                return updatedData;
+            }
         });
         t.nonNull.field("deleteProduct", {
             type: Product,
             args: {
                 id: nonNull(idArg()),
             },
-            resolve(_,__,ctx){
-    
+            async resolve(_,_args,ctx){
+                const product = await ctx.db.product.findUnique({
+                    where:{
+                        id: _args.id
+                    }
+                })
+                if (!product) {
+                    return null;
+                }
+                return await ctx.db.product.delete({
+                    where:{
+                        id: _args.id
+                    }
+                })
             }
         })
     }
