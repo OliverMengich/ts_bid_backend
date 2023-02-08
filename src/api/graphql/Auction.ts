@@ -1,13 +1,14 @@
-import { idArg, mutationField, nonNull, objectType, queryType, booleanArg, list, stringArg, subscriptionField, extendType } from "nexus";
+import { idArg,  nonNull, objectType, booleanArg, list, stringArg, extendType } from "nexus";
 import { Product } from "./Product";
 import { Bid } from "./Bid";
 import { User } from "./User";
 import { PubSub } from "graphql-subscriptions";
 import DBClient from "../database/DBClient";
-import AuctionModel from "../database/models/auction.model";
+import AuctionModel, { AuctionOutputs } from "../database/models/auction.model";
 import { Model } from "sequelize";
+import { context } from "../context";
 const pubSub = new PubSub();
-new DBClient<Model>(AuctionModel);
+context.auctionsdb=new DBClient(AuctionModel)
 export const Auction = objectType({
     name: "Auction",
     definition(t) {
@@ -37,10 +38,12 @@ export const AuctionQuery = extendType({
         t.list.field("auctions",{
             type: Auction,
             description: "Fetch a list of Auctions",
-            async resolve(_root,__,ctx){
-                console.log(_root)
-                console.log("ctx.db");
-                
+            async resolve(_root,_args,ctx){
+                console.log(_root,_args)
+                let res = await ctx.auctionsdb.findAll()
+                console.log(res.value);
+                return res.value;
+                // return 1;
             }
         })
         t.field("auction",{
@@ -67,22 +70,25 @@ export const AuctionMutation = extendType({
                 auctionUpdatedPrice: nonNull(stringArg()),
                 auctionIncrementTime: nonNull(stringArg()),
             },
-            resolve(_,__,ctx){
-                pubSub.publish("createAuction", {
-                    data: {
-                        id: "1",
-                        product: "1",
-                        auctionStatus: true,
-                        auctionWinner: "1",
-                        auctionStartTime: new Date(),
-                        auctionEndTime: new Date(),
-                        auctionStartPrice: 1.1,
-                        auctionUpdatedPrice: 1.1,
-                        auctionIncrementTime: 1.1,
-                        createdAt: new Date(),
-                        updatedAt: new Date(),
-                    },
-                });
+            async resolve(_,args,ctx){
+                let response = await ctx.db.save({...args});
+                console.log(response);
+                return response.value;
+                // pubSub.publish("createAuction", {
+                //     data: {
+                //         id: "1",
+                //         product: "1",
+                //         auctionStatus: true,
+                //         auctionWinner: "1",
+                //         auctionStartTime: new Date(),
+                //         auctionEndTime: new Date(),
+                //         auctionStartPrice: 1.1,
+                //         auctionUpdatedPrice: 1.1,
+                //         auctionIncrementTime: 1.1,
+                //         createdAt: new Date(),
+                //         updatedAt: new Date(),
+                //     },
+                // });
             }
         });
         t.nonNull.field("updateAuction", {

@@ -1,8 +1,12 @@
 import {objectType, interfaceType, nonNull, enumType, intArg, mutationField, stringArg, arg, floatArg, idArg, list, extendType} from "nexus";
+import DBClient from "../database/DBClient";
+import Products from "../database/models/product.model";
+import { context } from "../context";
 const CategoryEnum = enumType({
     name: "CategoryEnum",
     members: ["Electronics","Groceries","Animals"]
 });
+context.db= new DBClient(Products)
 export const Product = objectType({
     name: "Product",
     definition(t){
@@ -20,8 +24,10 @@ export const ProductQuery = extendType({
         t.list.field("products",{
             type: Product,
             description: "Fetch a list of products",
-            resolve(_,__,ctx){
-                
+            async resolve(_,__,ctx){
+                const product = await ctx.db.findAll();
+                console.log(ctx.db);
+                return product.value;
             }
         })
         t.field("product",{

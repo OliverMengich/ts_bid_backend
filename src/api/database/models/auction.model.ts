@@ -1,9 +1,11 @@
 import sequelize from "../db";
 import { DataTypes, Optional,Model } from "sequelize";
+import { ProductOutputs } from "./product.model";
+import { BidOutputs } from "./bid.model";
 interface AuctionAttributes {
 	id: string;
-	// product: string;
-	// bids: string;
+	product: string;
+	bids: string;
 	auctionStatus: boolean;
 	creator: string;
 	auctionWinner: string;
@@ -14,8 +16,8 @@ interface AuctionAttributes {
 	updatedAt?: Date;
 }
 export interface AuctionInputs extends Optional<AuctionAttributes, "id" | "auctionWinner"> {}
-export interface IngredientOutputs extends Required<AuctionAttributes> {}
-class AuctionModel extends Model<AuctionAttributes, AuctionInputs> implements AuctionAttributes {
+export interface AuctionOutputs extends Required<AuctionAttributes> {}
+class Auctions extends Model<AuctionAttributes, AuctionInputs> implements AuctionAttributes {
 	public readonly id!: string;
 	public product!: string;
 	public bids!: string;
@@ -28,29 +30,25 @@ class AuctionModel extends Model<AuctionAttributes, AuctionInputs> implements Au
 	public readonly createdAt!: Date;
 	public readonly updatedAt!: Date;
 }
-AuctionModel.init({
+Auctions.init({
     id: {
         type: DataTypes.UUID,
         allowNull: false,
         primaryKey: true,
 		defaultValue: DataTypes.UUIDV4
     },
-    // product: {
-    //     type: DataTypes.UUID,
-    //     allowNull: false,
-    //     references: {
-    //         model: "Products",
-    //         key: "id",
-    //     },
-    // },
-    // bids: {
-    //     type: DataTypes.STRING,
-    //     references: {
-    //         model: "Bids",
-    //         key: "id",
-    //     },
-    //     allowNull: false,
-    // },
+    product: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+            model: "Products",
+            key: "id",
+        },
+    },
+    bids: {
+        type: DataTypes.ARRAY(DataTypes.UUID),
+        allowNull: false,
+    },
 	auctionStatus: {
 		type: DataTypes.BOOLEAN,
 		allowNull: false,
@@ -86,4 +84,4 @@ AuctionModel.init({
 	sequelize
   });
 
-export default AuctionModel;
+export default Auctions;

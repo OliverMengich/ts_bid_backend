@@ -1,8 +1,8 @@
-import { Model } from "sequelize";
-import sequelize from "./database/db";
 import DBClient from "./database/DBClient";
 import AuctionModel from "./database/models/auction.model";
+import Products from "./database/models/product.model";
 export const context = {
-    // db: new DBClient<Model>(AuctionModel),
-    db: DBClient,
+    db: new DBClient(Products),
+    auctionsdb: new DBClient(AuctionModel)
+    // db:  DBClient,
 }

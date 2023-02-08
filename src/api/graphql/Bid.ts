@@ -4,6 +4,8 @@ import { PubSub } from "graphql-subscriptions";
 import { Auction } from "./Auction";
 import DBClient from "../database/DBClient";
 import { Model } from "sequelize";
+import Bids from "../database/models/bid.model";
+new DBClient(Bids);
 const pubSub = new PubSub();
 export const Bid = objectType({
     name: "Bid",

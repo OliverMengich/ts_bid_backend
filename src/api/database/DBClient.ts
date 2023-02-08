@@ -1,7 +1,6 @@
 import { Model, ModelStatic } from "sequelize";
-// import sequelize from "./db";
-import AuctionModel from './models/auction.model';
 import sequelize from "./db";
+import { AuctionOutputs } from "./models/auction.model";
 type RepoErrorCode = 404 | 500;
 class RepoError extends Error{
     public code: RepoErrorCode;
@@ -29,6 +28,7 @@ class Result<V,E>{
         }
     }
     public static ok<V>(value: V): Result<V,undefined>{
+        console.log("Value is: ",value);
         return new Result(true,value,undefined)
     }
     public static fail<E>(error: E): Result<undefined, E>{
@@ -48,13 +48,13 @@ class Result<V,E>{
     }
 }
 interface IAuction<M>{
-    save(model: M): AucRes<M>;
+    save(data: M): AucRes<M>;
     findById(id: string): AucRes<M>;
     findAll(): AucRes<M[]>;
 }
+// import { AuctionOutputs } from "./models/auction.model";
 export default class DBClient<M extends Model> implements IAuction<M> {
     private Model!: ModelStatic<M>;
-
     constructor(Model: ModelStatic<M>){
         this.Model = Model;
         sequelize.sync()
@@ -81,6 +81,9 @@ export default class DBClient<M extends Model> implements IAuction<M> {
     public async findAll(): AucRes<M[]> {
         try {
             const docs = await this.Model.findAll();
+            console.log(this.Model);
+            console.log('docs is: ',docs);
+            
             return Result.ok(docs)
         } catch (error: any) {
             return Result.fail(new RepoError(error.message,500))

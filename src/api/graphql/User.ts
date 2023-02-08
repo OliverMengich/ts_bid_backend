@@ -11,7 +11,7 @@ import {
 import UserModel from "../database/models/user.model";
 import DBClient from "../database/DBClient";
 import { Model } from "sequelize";
-new DBClient<Model>(UserModel)
+new DBClient(UserModel)
 export const User = objectType({
     name: "User",
     definition(t) {
