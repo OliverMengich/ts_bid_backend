@@ -65,13 +65,13 @@ export interface NexusGenObjects {
   Query: {};
   Subscription: {};
   User: { // root type
-    createdAt: string; // String!
+    createdAt?: string | null; // String
     email: string; // String!
     id: string; // ID!
     name: string; // String!
-    password: string; // String!
+    password?: string | null; // String
     phoneNumber: string; // String!
-    updatedAt: string; // String!
+    updatedAt?: string | null; // String
   }
 }
 
@@ -113,10 +113,10 @@ export interface NexusGenFieldTypes {
   Mutation: { // field return type
     createAuction: NexusGenRootTypes['Auction']; // Auction!
     createProduct: NexusGenRootTypes['Product']; // Product!
-    createUser: NexusGenRootTypes['User']; // User!
+    createUser: NexusGenRootTypes['User'] | null; // User
     deleteAuction: NexusGenRootTypes['Auction']; // Auction!
     deleteProduct: NexusGenRootTypes['Product'] | null; // Product
-    deleteUser: NexusGenRootTypes['User']; // User!
+    deleteUser: NexusGenRootTypes['User'] | null; // User
     updateAuction: NexusGenRootTypes['Auction']; // Auction!
     updateProduct: NexusGenRootTypes['Product']; // Product!
     updateUser: NexusGenRootTypes['User']; // User!
@@ -135,7 +135,7 @@ export interface NexusGenFieldTypes {
     product: NexusGenRootTypes['Product']; // Product!
     products: Array<NexusGenRootTypes['Product'] | null> | null; // [Product]
     user: NexusGenRootTypes['User'] | null; // User
-    users: Array<Array<NexusGenRootTypes['User'] | null> | null> | null; // [[User]]
+    users: Array<NexusGenRootTypes['User'] | null> | null; // [User]
   }
   Subscription: { // field return type
     createAuction: NexusGenRootTypes['Auction']; // Auction!
@@ -143,13 +143,13 @@ export interface NexusGenFieldTypes {
     updateAuction: NexusGenRootTypes['Auction']; // Auction!
   }
   User: { // field return type
-    createdAt: string; // String!
+    createdAt: string | null; // String
     email: string; // String!
     id: string; // ID!
     name: string; // String!
-    password: string; // String!
+    password: string | null; // String
     phoneNumber: string; // String!
-    updatedAt: string; // String!
+    updatedAt: string | null; // String
   }
 }
 
@@ -241,9 +241,10 @@ export interface NexusGenArgTypes {
       title: string; // String!
     }
     createUser: { // args
-      email: string; // ID!
-      name: string; // ID!
-      password: string; // ID!
+      email: string; // String!
+      name: string; // String!
+      password: string; // String!
+      phoneNumber: string; // String!
     }
     deleteAuction: { // args
       auctionId: string; // ID!
@@ -274,10 +275,11 @@ export interface NexusGenArgTypes {
       title?: string | null; // String
     }
     updateUser: { // args
-      email: string; // ID!
+      email?: string | null; // String
       id: string; // ID!
-      name: string; // ID!
-      password: string; // ID!
+      name?: string | null; // String
+      password?: string | null; // String
+      phoneNumber?: string | null; // String
     }
   }
   Query: {
@@ -286,6 +288,9 @@ export interface NexusGenArgTypes {
     }
     product: { // args
       id: string; // String!
+    }
+    user: { // args
+      id: string; // ID!
     }
   }
 }

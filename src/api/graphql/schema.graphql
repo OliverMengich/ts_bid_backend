@@ -43,13 +43,13 @@ enum CategoryEnum {
 type Mutation {
   createAuction(auctionEndTime: String!, auctionIncrementTime: String!, auctionStartPrice: String!, auctionStartTime: String!, auctionStatus: Boolean!, auctionUpdatedPrice: String!, auctionWinner: ID!, productId: ID!): Auction!
   createProduct(category: CategoryEnum, imageUri: [String]!, owner: String, price: Float!, title: String!): Product!
-  createUser(email: ID!, name: ID!, password: ID!): User!
+  createUser(email: String!, name: String!, password: String!, phoneNumber: String!): User
   deleteAuction(auctionId: ID!): Auction!
   deleteProduct(id: ID!): Product
-  deleteUser(id: ID!): User!
+  deleteUser(id: ID!): User
   updateAuction(auctionEndTime: String!, auctionId: ID!, auctionIncrementTime: String!, auctionStartPrice: String!, auctionStartTime: String!, auctionStatus: Boolean!, auctionUpdatedPrice: String!, auctionWinner: ID!, id: String!): Auction!
   updateProduct(category: CategoryEnum, id: ID, imageUri: [String], owner: String, price: Float, title: String): Product!
-  updateUser(email: ID!, id: ID!, name: ID!, password: ID!): User!
+  updateUser(email: String, id: ID!, name: String, password: String, phoneNumber: String): User!
 }
 
 type Product {
@@ -73,10 +73,10 @@ type Query {
   products: [Product]
 
   """Retrieve a user by id"""
-  user: User
+  user(id: ID!): User
 
   """Fetch a list of Users"""
-  users: [[User]]
+  users: [User]
 }
 
 type Subscription {
@@ -86,11 +86,11 @@ type Subscription {
 }
 
 type User {
-  createdAt: String!
+  createdAt: String
   email: String!
   id: ID!
   name: String!
-  password: String!
+  password: String
   phoneNumber: String!
-  updatedAt: String!
+  updatedAt: String
 }
