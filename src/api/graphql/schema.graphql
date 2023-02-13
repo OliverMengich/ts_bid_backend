@@ -19,16 +19,16 @@ type Auction {
 
 type Bid {
   auction: Auction!
+  bidPrice: Float!
+  bidTime: String!
   bidder: ID!
-  categories: String!
-  createdAt: Int!
+  createdAt: String!
   id: ID!
-  imageUrl: String!
   product: Product!
   updatedAt: String!
-  user: String!
 }
 
+"""Category of products in my Products table"""
 enum CategoryEnum {
   Animals
   Books
@@ -42,16 +42,13 @@ enum CategoryEnum {
 
 type Mutation {
   createAuction(auctionEndTime: String!, auctionIncrementTime: String!, auctionStartPrice: String!, auctionStartTime: String!, auctionStatus: Boolean!, auctionUpdatedPrice: String!, auctionWinner: ID!, productId: ID!): Auction!
-  createProduct(category: CategoryEnum, imageUri: String!, owner: String, price: Float!, title: String!): Product!
+  createProduct(category: CategoryEnum, imageUri: [String]!, owner: String, price: Float!, title: String!): Product!
   createUser(email: ID!, name: ID!, password: ID!): User!
-  deleteABid(bidId: ID!, bidder: ID!): Bid!
   deleteAuction(auctionId: ID!): Auction!
-  deleteProduct(id: ID!): Product!
+  deleteProduct(id: ID!): Product
   deleteUser(id: ID!): User!
-  placeABid(auctionId: ID!, bidder: ID!, price: Float!): Bid!
-  updateABid(bidId: ID!, bidder: ID!, price: Float!): Bid!
-  updateAuction(auctionEndTime: String!, auctionId: ID!, auctionIncrementTime: String!, auctionStartPrice: String!, auctionStartTime: String!, auctionStatus: Boolean!, auctionUpdatedPrice: String!, auctionWinner: ID!): Auction!
-  updateProduct(category: CategoryEnum, id: ID!, imageUri: String!, owner: String, price: Float!, title: String!): Product!
+  updateAuction(auctionEndTime: String!, auctionId: ID!, auctionIncrementTime: String!, auctionStartPrice: String!, auctionStartTime: String!, auctionStatus: Boolean!, auctionUpdatedPrice: String!, auctionWinner: ID!, id: String!): Auction!
+  updateProduct(category: CategoryEnum, id: ID, imageUri: [String], owner: String, price: Float, title: String): Product!
   updateUser(email: ID!, id: ID!, name: ID!, password: ID!): User!
 }
 
@@ -65,17 +62,12 @@ type Product {
 }
 
 type Query {
-  auction: Auction
+  """Retrieve an auction by id"""
+  auction(id: ID!): Auction
 
   """Fetch a list of Auctions"""
   auctions: [Auction]
-
-  """Retrieve a bid by id"""
-  bid: Bid!
-
-  """Fetch a list of Bids"""
-  bids: [Bid]
-  product(id: Int!): Product!
+  product(id: String!): Product!
 
   """Fetch a list of products"""
   products: [Product]
@@ -90,10 +82,7 @@ type Query {
 type Subscription {
   createAuction: Auction!
   deleteAuction: Auction!
-  deleteBid: Bid
-  placeABid: Bid
   updateAuction: Auction!
-  updateBid: Bid
 }
 
 type User {

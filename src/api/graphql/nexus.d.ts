@@ -45,14 +45,13 @@ export interface NexusGenObjects {
   }
   Bid: { // root type
     auction: NexusGenRootTypes['Auction']; // Auction!
+    bidPrice: number; // Float!
+    bidTime: string; // String!
     bidder: string; // ID!
-    categories: string; // String!
-    createdAt: number; // Int!
+    createdAt: string; // String!
     id: string; // ID!
-    imageUrl: string; // String!
     product: NexusGenRootTypes['Product']; // Product!
     updatedAt: string; // String!
-    user: string; // String!
   }
   Mutation: {};
   Product: { // root type
@@ -103,25 +102,21 @@ export interface NexusGenFieldTypes {
   }
   Bid: { // field return type
     auction: NexusGenRootTypes['Auction']; // Auction!
+    bidPrice: number; // Float!
+    bidTime: string; // String!
     bidder: string; // ID!
-    categories: string; // String!
-    createdAt: number; // Int!
+    createdAt: string; // String!
     id: string; // ID!
-    imageUrl: string; // String!
     product: NexusGenRootTypes['Product']; // Product!
     updatedAt: string; // String!
-    user: string; // String!
   }
   Mutation: { // field return type
     createAuction: NexusGenRootTypes['Auction']; // Auction!
     createProduct: NexusGenRootTypes['Product']; // Product!
     createUser: NexusGenRootTypes['User']; // User!
-    deleteABid: NexusGenRootTypes['Bid']; // Bid!
     deleteAuction: NexusGenRootTypes['Auction']; // Auction!
-    deleteProduct: NexusGenRootTypes['Product']; // Product!
+    deleteProduct: NexusGenRootTypes['Product'] | null; // Product
     deleteUser: NexusGenRootTypes['User']; // User!
-    placeABid: NexusGenRootTypes['Bid']; // Bid!
-    updateABid: NexusGenRootTypes['Bid']; // Bid!
     updateAuction: NexusGenRootTypes['Auction']; // Auction!
     updateProduct: NexusGenRootTypes['Product']; // Product!
     updateUser: NexusGenRootTypes['User']; // User!
@@ -137,8 +132,6 @@ export interface NexusGenFieldTypes {
   Query: { // field return type
     auction: NexusGenRootTypes['Auction'] | null; // Auction
     auctions: Array<NexusGenRootTypes['Auction'] | null> | null; // [Auction]
-    bid: NexusGenRootTypes['Bid']; // Bid!
-    bids: Array<NexusGenRootTypes['Bid'] | null> | null; // [Bid]
     product: NexusGenRootTypes['Product']; // Product!
     products: Array<NexusGenRootTypes['Product'] | null> | null; // [Product]
     user: NexusGenRootTypes['User'] | null; // User
@@ -147,10 +140,7 @@ export interface NexusGenFieldTypes {
   Subscription: { // field return type
     createAuction: NexusGenRootTypes['Auction']; // Auction!
     deleteAuction: NexusGenRootTypes['Auction']; // Auction!
-    deleteBid: NexusGenRootTypes['Bid'] | null; // Bid
-    placeABid: NexusGenRootTypes['Bid'] | null; // Bid
     updateAuction: NexusGenRootTypes['Auction']; // Auction!
-    updateBid: NexusGenRootTypes['Bid'] | null; // Bid
   }
   User: { // field return type
     createdAt: string; // String!
@@ -180,25 +170,21 @@ export interface NexusGenFieldTypeNames {
   }
   Bid: { // field return type name
     auction: 'Auction'
+    bidPrice: 'Float'
+    bidTime: 'String'
     bidder: 'ID'
-    categories: 'String'
-    createdAt: 'Int'
+    createdAt: 'String'
     id: 'ID'
-    imageUrl: 'String'
     product: 'Product'
     updatedAt: 'String'
-    user: 'String'
   }
   Mutation: { // field return type name
     createAuction: 'Auction'
     createProduct: 'Product'
     createUser: 'User'
-    deleteABid: 'Bid'
     deleteAuction: 'Auction'
     deleteProduct: 'Product'
     deleteUser: 'User'
-    placeABid: 'Bid'
-    updateABid: 'Bid'
     updateAuction: 'Auction'
     updateProduct: 'Product'
     updateUser: 'User'
@@ -214,8 +200,6 @@ export interface NexusGenFieldTypeNames {
   Query: { // field return type name
     auction: 'Auction'
     auctions: 'Auction'
-    bid: 'Bid'
-    bids: 'Bid'
     product: 'Product'
     products: 'Product'
     user: 'User'
@@ -224,10 +208,7 @@ export interface NexusGenFieldTypeNames {
   Subscription: { // field return type name
     createAuction: 'Auction'
     deleteAuction: 'Auction'
-    deleteBid: 'Bid'
-    placeABid: 'Bid'
     updateAuction: 'Auction'
-    updateBid: 'Bid'
   }
   User: { // field return type name
     createdAt: 'String'
@@ -254,7 +235,7 @@ export interface NexusGenArgTypes {
     }
     createProduct: { // args
       category?: NexusGenEnums['CategoryEnum'] | null; // CategoryEnum
-      imageUri: string; // String!
+      imageUri: Array<string | null>; // [String]!
       owner?: string | null; // String
       price: number; // Float!
       title: string; // String!
@@ -263,10 +244,6 @@ export interface NexusGenArgTypes {
       email: string; // ID!
       name: string; // ID!
       password: string; // ID!
-    }
-    deleteABid: { // args
-      bidId: string; // ID!
-      bidder: string; // ID!
     }
     deleteAuction: { // args
       auctionId: string; // ID!
@@ -277,16 +254,6 @@ export interface NexusGenArgTypes {
     deleteUser: { // args
       id: string; // ID!
     }
-    placeABid: { // args
-      auctionId: string; // ID!
-      bidder: string; // ID!
-      price: number; // Float!
-    }
-    updateABid: { // args
-      bidId: string; // ID!
-      bidder: string; // ID!
-      price: number; // Float!
-    }
     updateAuction: { // args
       auctionEndTime: string; // String!
       auctionId: string; // ID!
@@ -296,14 +263,15 @@ export interface NexusGenArgTypes {
       auctionStatus: boolean; // Boolean!
       auctionUpdatedPrice: string; // String!
       auctionWinner: string; // ID!
+      id: string; // String!
     }
     updateProduct: { // args
       category?: NexusGenEnums['CategoryEnum'] | null; // CategoryEnum
-      id: string; // ID!
-      imageUri: string; // String!
+      id?: string | null; // ID
+      imageUri?: Array<string | null> | null; // [String]
       owner?: string | null; // String
-      price: number; // Float!
-      title: string; // String!
+      price?: number | null; // Float
+      title?: string | null; // String
     }
     updateUser: { // args
       email: string; // ID!
@@ -313,8 +281,11 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
+    auction: { // args
+      id: string; // ID!
+    }
     product: { // args
-      id: number; // Int!
+      id: string; // String!
     }
   }
 }

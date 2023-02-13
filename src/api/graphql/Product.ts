@@ -72,12 +72,12 @@ export const ProductMutation = extendType({
         t.nonNull.field("updateProduct", {
             type: Product,
             args: {
-                id: nonNull(idArg()),
-                title: nonNull(stringArg()),
+                id: (idArg()),
+                title: (stringArg()),
                 category: arg({ type: CategoryEnum }),
                 owner: arg({type: "String"}),
-                imageUri: nonNull(list(stringArg())),
-                price: nonNull(floatArg()),
+                imageUri: (list(stringArg())),
+                price: (floatArg()),
             },
             async resolve(_,_args,ctx){
                 const updatedData = await ctx.db.product.update({
@@ -91,7 +91,7 @@ export const ProductMutation = extendType({
                 return updatedData;
             }
         });
-        t.nonNull.field("deleteProduct", {
+        t.field("deleteProduct", {
             type: Product,
             args: {
                 id: nonNull(idArg()),
@@ -103,7 +103,7 @@ export const ProductMutation = extendType({
                     }
                 })
                 if (!product) {
-                    return null;
+                    return;
                 }
                 return await ctx.db.product.delete({
                     where:{

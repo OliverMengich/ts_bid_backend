@@ -1,3 +1,5 @@
+import { Auctions, Product, User } from "@prisma/client";
+
 enum CategoryEnum{
     Electronics,
     Groceries,
@@ -16,6 +18,15 @@ export interface ProductX {
     price: number;
     createdAt?: Date;
     updatedAt?: Date;
+}
+export type BidVals={
+    id: string
+    product: Product
+    auction: Auctions
+    bidder: User
+    bidTime: Date
+    createdAt: Date
+    updatedAt: Date
 }
 export interface ProductInput {
     title: string;

@@ -72,11 +72,13 @@ export const AuctionMutation = extendType({
                 return await ctx.db.auctions.create({
                     data: {...args}
                 })
-                .then((res)=>{
-                    return pubSub.publish("createAuction", {
-                        data: {...res},
-                    });
-                }).catch(err=>err)
+                .then((res: unknown)=>{
+                    console.log(res);
+                    
+                    // return pubSub.publish("createAuction", {
+                    //     data: {...res},
+                    // });
+                }).catch((err: unknown)=>err)
             }
         });
         t.nonNull.field("updateAuction", {
@@ -93,18 +95,18 @@ export const AuctionMutation = extendType({
                 auctionIncrementTime: nonNull(stringArg()),
             },
             async resolve(_,_args,ctx){
-                return await ctx.db.auctions.update({
-                    where: {
-                        id: _args.id
-                    },
-                    data:{
-                        ..._args
-                    }
-                }).then(res=>{
-                    return pubSub.publish("updateAuction", {
-                        data: {...res},
-                    });
-                }).catch(err=>{err})
+                // return await ctx.db.auctions.update({
+                //     where: {
+                //         id: _args.id
+                //     },
+                //     data:{
+                //         ..._args
+                //     }
+                // }).then(res=>{
+                //     return pubSub.publish("updateAuction", {
+                //         data: {...res},
+                //     });
+                // }).catch(err=>{err})
             }
         });
         t.nonNull.field("deleteAuction", {
@@ -113,17 +115,17 @@ export const AuctionMutation = extendType({
                 auctionId: nonNull(idArg()),
             },
             async resolve(_,_args,ctx){
-                return await ctx.db.auctions.delete({
-                    where:{
-                        id: _args.auctionId
-                    }
-                }).then(res=>{
-                    return pubSub.publish("deleteAuction", {
-                        data: {
-                            ...res
-                        },
-                    })
-                }).catch(err=>err)
+                // return await ctx.db.auctions.delete({
+                //     where:{
+                //         id: _args.auctionId
+                //     }
+                // }).then(res=>{
+                //     return pubSub.publish("deleteAuction", {
+                //         data: {
+                //             ...res
+                //         },
+                //     })
+                // }).catch(err=>err)
             }
         });
     }
