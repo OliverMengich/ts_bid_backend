@@ -11,18 +11,21 @@ export const Auction = objectType({
         t.nonNull.field("product",{
             type: Product
         })
-        t.list.nonNull.field("bids",{
+        t.list.field("bids",{
             type: Bid
         })
         t.nonNull.boolean("auctionStatus")
-        t.nonNull.field("auctionWinner",{
+        t.field("auctionWinner",{
+            type: User
+        })
+        t.nonNull.field("creator",{
             type: User
         })
         t.nonNull.string("auctionStartTime");
         t.nonNull.string("auctionEndTime");
         t.nonNull.string("auctionStartPrice");
-        t.nonNull.string("auctionUpdatedPrice")
-        t.nonNull.string("auctionIncrementTime");
+        t.string("auctionUpdatedPrice")
+        t.string("auctionIncrementTime");
         t.nonNull.string("createdAt");
         t.nonNull.string("updatedAt");
     },
@@ -33,7 +36,7 @@ export const AuctionQuery = extendType({
         t.list.field("auctions",{
             type: Auction,
             description: "Fetch a list of Auctions",
-            async resolve(_root,_args,ctx){
+            async resolve(_,_args,ctx){
                 return await ctx.db.auctions.findMany();
             }
         })
@@ -61,7 +64,7 @@ export const AuctionMutation = extendType({
             args:{
                 productId: nonNull(idArg()),
                 auctionStatus: nonNull(booleanArg()),
-                auctionWinner: nonNull(idArg()),
+                auctionWinner: idArg(),
                 auctionStartTime: nonNull(stringArg()),
                 auctionEndTime: nonNull(stringArg()),
                 auctionStartPrice: nonNull(stringArg()),
@@ -74,7 +77,7 @@ export const AuctionMutation = extendType({
                 })
                 .then((res: unknown)=>{
                     console.log(res);
-                    
+                    return res;
                     // return pubSub.publish("createAuction", {
                     //     data: {...res},
                     // });

@@ -4,14 +4,15 @@
 
 type Auction {
   auctionEndTime: String!
-  auctionIncrementTime: String!
+  auctionIncrementTime: String
   auctionStartPrice: String!
   auctionStartTime: String!
   auctionStatus: Boolean!
-  auctionUpdatedPrice: String!
-  auctionWinner: User!
-  bids: [Bid!]
+  auctionUpdatedPrice: String
+  auctionWinner: User
+  bids: [Bid]
   createdAt: String!
+  creator: User!
   id: ID!
   product: Product!
   updatedAt: String!
@@ -41,7 +42,7 @@ enum CategoryEnum {
 }
 
 type Mutation {
-  createAuction(auctionEndTime: String!, auctionIncrementTime: String!, auctionStartPrice: String!, auctionStartTime: String!, auctionStatus: Boolean!, auctionUpdatedPrice: String!, auctionWinner: ID!, productId: ID!): Auction!
+  createAuction(auctionEndTime: String!, auctionIncrementTime: String!, auctionStartPrice: String!, auctionStartTime: String!, auctionStatus: Boolean!, auctionUpdatedPrice: String!, auctionWinner: ID, productId: ID!): Auction!
   createProduct(category: CategoryEnum, imageUri: [String]!, owner: String, price: Float!, title: String!): Product!
   createUser(email: String!, name: String!, password: String!, phoneNumber: String!): User
   deleteAuction(auctionId: ID!): Auction!

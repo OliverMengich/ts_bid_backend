@@ -21,35 +21,35 @@ export const Bid = objectType({
         t.nonNull.string("updatedAt")
     },
 });
-// export const BidQuery = extendType({
-//     type: "Query",
-//     definition(t) {
-//         t.list.field("bids",{
-//             type: Bid,
-//             description: "Fetch a list of Bids",
-//             async resolve(_,__,ctx){
-//                 const rs = await ctx.db.bids.findMany();
-//                 console.log(rs);
-//                 return rs
-//             }
-//         })
-//         t.field("bid",{
-//             type: nonNull(Bid),
-//             args:{
-//                 id: nonNull(idArg()),
-//             },
-//             description:"Retrieve a bid by id",
-//             async resolve(_,_args,ctx){
-//                 return ctx.db.bids.findUnique({
-//                     where:{
+export const BidQuery = extendType({
+    type: "Query",
+    definition(t) {
+        t.list.field("bids",{
+            type: Bid,
+            description: "Fetch a list of Bids",
+            async resolve(_,__,ctx){
+                const rs = await ctx.db.bids.findMany();
+                console.log(rs);
+                return rs
+            }
+        })
+        t.field("bid",{
+            type: nonNull(Bid),
+            args:{
+                id: nonNull(idArg()),
+            },
+            description:"Retrieve a bid by id",
+            async resolve(_,_args,ctx){
+                return ctx.db.bids.findUnique({
+                    where:{
 
-//                         id: _args.id
-//                     }
-//                 })
-//             }
-//         })
-//     },
-// });
+                        id: _args.id
+                    }
+                })
+            }
+        })
+    },
+});
 // export const BidMutation = extendType({
 //     type: "Mutation",
 //     definition: t =>{

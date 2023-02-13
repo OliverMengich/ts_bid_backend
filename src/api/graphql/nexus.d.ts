@@ -31,14 +31,15 @@ export interface NexusGenScalars {
 export interface NexusGenObjects {
   Auction: { // root type
     auctionEndTime: string; // String!
-    auctionIncrementTime: string; // String!
+    auctionIncrementTime?: string | null; // String
     auctionStartPrice: string; // String!
     auctionStartTime: string; // String!
     auctionStatus: boolean; // Boolean!
-    auctionUpdatedPrice: string; // String!
-    auctionWinner: NexusGenRootTypes['User']; // User!
-    bids?: NexusGenRootTypes['Bid'][] | null; // [Bid!]
+    auctionUpdatedPrice?: string | null; // String
+    auctionWinner?: NexusGenRootTypes['User'] | null; // User
+    bids?: Array<NexusGenRootTypes['Bid'] | null> | null; // [Bid]
     createdAt: string; // String!
+    creator: NexusGenRootTypes['User']; // User!
     id: string; // ID!
     product: NexusGenRootTypes['Product']; // Product!
     updatedAt: string; // String!
@@ -88,14 +89,15 @@ export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnu
 export interface NexusGenFieldTypes {
   Auction: { // field return type
     auctionEndTime: string; // String!
-    auctionIncrementTime: string; // String!
+    auctionIncrementTime: string | null; // String
     auctionStartPrice: string; // String!
     auctionStartTime: string; // String!
     auctionStatus: boolean; // Boolean!
-    auctionUpdatedPrice: string; // String!
-    auctionWinner: NexusGenRootTypes['User']; // User!
-    bids: NexusGenRootTypes['Bid'][] | null; // [Bid!]
+    auctionUpdatedPrice: string | null; // String
+    auctionWinner: NexusGenRootTypes['User'] | null; // User
+    bids: Array<NexusGenRootTypes['Bid'] | null> | null; // [Bid]
     createdAt: string; // String!
+    creator: NexusGenRootTypes['User']; // User!
     id: string; // ID!
     product: NexusGenRootTypes['Product']; // Product!
     updatedAt: string; // String!
@@ -164,6 +166,7 @@ export interface NexusGenFieldTypeNames {
     auctionWinner: 'User'
     bids: 'Bid'
     createdAt: 'String'
+    creator: 'User'
     id: 'ID'
     product: 'Product'
     updatedAt: 'String'
@@ -230,7 +233,7 @@ export interface NexusGenArgTypes {
       auctionStartTime: string; // String!
       auctionStatus: boolean; // Boolean!
       auctionUpdatedPrice: string; // String!
-      auctionWinner: string; // ID!
+      auctionWinner?: string | null; // ID
       productId: string; // ID!
     }
     createProduct: { // args

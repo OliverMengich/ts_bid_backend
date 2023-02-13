@@ -16,9 +16,11 @@ model Auctions {
   auctionStartTime  DateTime
   auctionEndTime    DateTime
   auctionStartPrice Int
-  User              User     @relation(fields: [creatorId], references: [id])
+  creator              User     @relation(fields: [creatorId], references: [id])
   product           Product  @relation(fields: [productId], references: [id])
   Bids              Bids[]
+  updatedAt DateTime @updatedAt @default(now())
+  createdAt DateTime @default(now())
 }
 
 model Bids {
